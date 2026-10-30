@@ -7,6 +7,9 @@ import styles from './login.module.css';
 
 type Estado = 'parado' | 'enviando' | 'enviado' | 'erro' | 'teste';
 
+// Modo Teste: Bypassa autenticação por email para testes locais
+// Usuários disponíveis: Taty, Gabi Diniz, Heitor Sky
+
 const TEST_USERS = [
   { id: '10000000-0000-0000-0000-000000000001', nome: 'Taty (Teste)', email: 'teste.taty@example.com' },
   { id: '10000000-0000-0000-0000-000000000002', nome: 'Gabi Diniz', email: 'gabi.diniz.medeiros@gmail.com' },
