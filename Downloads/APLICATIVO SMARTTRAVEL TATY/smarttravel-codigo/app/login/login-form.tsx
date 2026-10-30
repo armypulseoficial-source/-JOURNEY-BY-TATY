@@ -7,7 +7,7 @@ import styles from './login.module.css';
 
 type Estado = 'parado' | 'enviando' | 'enviado' | 'erro' | 'teste';
 
-// Modo Teste: Bypassa autenticação por email para testes locais
+// FIXED: Modo Teste: Bypassa autenticação por email para testes locais
 // Usuários disponíveis: Taty, Gabi Diniz, Heitor Sky
 
 const TEST_USERS = [
