@@ -27,3 +27,16 @@
   color: #9a3412;
   font-size: 13px;
 }
+
+.logoutOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #f8f6f0;
+  color: #0f172a;
+  font: inherit;
+  text-align: center;
+}

@@ -31,6 +31,12 @@ async function LoginContent({ searchParams }: Props) {
           Este link não é válido ou já expirou. Peça um novo abaixo.
         </p>
       )}
+      {erro === 'offline-cleanup' && (
+        <p role="alert" className={styles.alert}>
+          A sessão foi encerrada, mas não foi possível confirmar a remoção dos dados salvos neste dispositivo.
+          Feche as outras abas do SmartTravel e tente limpar os dados do site nas configurações do navegador.
+        </p>
+      )}
       <LoginForm next={safeNext(next)} />
     </>
   );
