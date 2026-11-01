@@ -5,7 +5,8 @@
 // (é o que Safari/iOS faz quando a cota do origin estoura).
 import 'fake-indexeddb/auto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { saveDocumentOffline, getOfflineDocument } from '@/lib/offline/store';
+import { clearPrivateOfflineData } from '@/lib/offline/clear-private-data';
+import { clearOfflineDocuments, saveDocumentOffline, getOfflineDocument } from '@/lib/offline/store';
 
 const SIGNED_URL = 'https://storage.test/vouchers-pdf/cancun/voucher.pdf?token=abc&exp=3600';
 
@@ -54,6 +55,30 @@ describe('saveDocumentOffline', () => {
 });
 
 describe('getOfflineDocument', () => {
+  it('limpa documentos e caches privados sem apagar arquivos estáticos', async () => {
+    const deleteCache = vi.fn(async () => true);
+    vi.stubGlobal('caches', {
+      keys: vi.fn(async () => ['st-html-v1', 'st-rsc-v1', 'st-arquivos-v1']),
+      delete: deleteCache,
+    });
+
+    await clearPrivateOfflineData();
+
+    expect(deleteCache).toHaveBeenCalledTimes(2);
+    expect(deleteCache).toHaveBeenCalledWith('st-html-v1');
+    expect(deleteCache).toHaveBeenCalledWith('st-rsc-v1');
+    expect(deleteCache).not.toHaveBeenCalledWith('st-arquivos-v1');
+  });
+
+  it('apaga cópias offline no encerramento da sessão', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(pdf('voucher'))));
+    expect(await saveDocumentOffline('doc-1', SIGNED_URL)).toEqual({ ok: true });
+
+    await clearOfflineDocuments();
+
+    expect(await getOfflineDocument('doc-1')).toBeNull();
+  });
+
   it('devolve o Blob salvo com o conteúdo original', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => new Response(pdf('%PDF-1.4 voucher Cancun'))));
     expect(await saveDocumentOffline('doc-1', SIGNED_URL)).toEqual({ ok: true });

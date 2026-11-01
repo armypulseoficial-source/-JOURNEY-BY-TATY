@@ -1,6 +1,7 @@
 -- SmartTravel · setup do banco (ciclo 1)
 -- Cole este arquivo inteiro no SQL Editor do projeto Supabase e clique em Run.
--- Ordem: núcleo (0001), convites (0002), bucket de vouchers e políticas (0003).
+-- Ordem: núcleo (0001), convites (0002), bucket de vouchers e políticas (0003),
+-- sincronização de perfis de autenticação (0004).
 
 -- SmartTravel · Portal B2B · ciclo 1 · schema central e RLS.
 -- Regra: em cada tabela, as políticas são criadas ANTES de
@@ -372,3 +373,29 @@ create policy vouchers_traveler_select on storage.objects
         bucket_id = 'vouchers-pdf'
         and public.is_trip_traveler(((storage.foldername(name))[1])::uuid)
     );
+
+-- Sincronização de usuários do Supabase Auth (migração 0004).
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+    if new.email is null then
+        return new;
+    end if;
+
+    insert into public.users (id, email, full_name)
+    values (new.id, new.email, coalesce(new.user_metadata->>'full_name', new.email))
+    on conflict (id) do nothing;
+    return new;
+end;
+$$ language plpgsql security definer set search_path = '';
+
+insert into public.users (id, email, full_name)
+select id, email, coalesce(user_metadata->>'full_name', email)
+from auth.users
+where email is not null
+on conflict (id) do nothing;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+    after insert on auth.users
+    for each row execute procedure public.handle_new_user();
