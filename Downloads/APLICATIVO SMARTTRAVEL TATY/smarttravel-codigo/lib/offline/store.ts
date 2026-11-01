@@ -61,6 +61,15 @@ export function isQuotaError(erro: unknown): boolean {
   return e?.name === 'QuotaExceededError' || e?.code === 22 || e?.code === 1014;
 }
 
+export function clearOfflineDocuments(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.deleteDatabase(DB_NAME);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error ?? new Error('offline_database_delete_failed'));
+    req.onblocked = () => reject(new DOMException('Banco offline bloqueado', 'InvalidStateError'));
+  });
+}
+
 // Baixa o PDF pela URL assinada e guarda a cópia local. Falha de download
 // (rede caiu ou URL recusada, por exemplo expirada com 403) devolve 'network' e
 // não mexe na cópia que já existe. Falha de cota devolve 'quota'. Outros erros

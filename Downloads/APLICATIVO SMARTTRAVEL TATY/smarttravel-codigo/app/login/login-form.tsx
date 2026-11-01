@@ -26,7 +26,6 @@ export function LoginForm({ next }: { next: string }) {
     }
   }
 
-  // Mesma mensagem para e-mail cadastrado ou não, para não revelar quem tem conta.
   if (estado === 'enviado') {
     return (
       <p role="status" className={styles.status}>
