@@ -16,7 +16,8 @@ Este repositório não é mais usado. Não leia código daqui como fonte, não a
 - Nome: `-JOURNEY-BY-TATY` (com um hífen no começo), público, na conta `armypulseoficial-source`.
 - Descrição no GitHub: "PROJETO CRIACAO APP TRAVEL-".
 - Tem 1 commit no ramo `main` (15/10/2026, "Initial commit: SmartTravel"), só com uma pasta `Downloads`.
-- Tem também ramos `claude/...` de sessões antigas. Nada disso vai para produção.
+- Tem também ramos `claude/...` de sessões antigas e 2 pedidos de mesclagem (PR) abertos em rascunho, com código de um retrato antigo do app (pasta `Downloads/APLICATIVO SMARTTRAVEL TATY/smarttravel-codigo`): o #1 (30/10/2026, migração e dados de teste) e o #2 (26/11/2026, segurança: proxy de rota, logout e cabeçalhos). **Não mesclar.** O que for útil é portado para o repositório oficial.
+- Existe um projeto na Vercel ligado a este repositório. NÃO CONFIRMADO se ele publica algo no ar. Não mexer sem perguntar à Taty.
 
 ## Decisão
 
